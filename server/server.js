@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 const SECRET_KEY = "APIKEY";
 
-mongoose.connect("mongodb://127.0.0.1:27017/socialdb");
+mongoose.connect("mongodb://127.0.0.1:27017/socialdb1");
 
 app.use(express.static("public"));
 app.use("/images", express.static("images"));
