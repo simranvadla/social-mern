@@ -1,13 +1,26 @@
-import React from 'react'
-import Comment from '../comment/Comment'
+import React from "react";
+import { useContext } from "react";
+import Comment from "../comment/Comment";
+import { AppContext } from "../../context/appContext";
+import axios from "axios";
 export default function Homeitems(props) {
-    const elem = props.elem
+  const { user } = useContext(AppContext);
+  const elem = props.elem;
+  const handleDelete = async (id) => {
+    const url = `http://localhost:8080/delete/${id}`;
+    const result = await axios.delete(url, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+  };
   return (
     <div>
-        <div>{elem.users[0].name} - {elem.item}<br></br>
-        <img style={{width:'100%'}} src={elem.file}/>
-        </div>
-        {/* <Comment id={item.id}/> */}
+      <div>
+        {elem.users[0].name} - {elem.item}
+        <button onClick={() => handleDelete(elem._id)}>Delete</button>
+        <br></br>
+        <img style={{ width: "100%" }} src={elem.file} />
+      </div>
+      {/* <Comment id={item.id}/> */}
     </div>
-  )
+  );
 }

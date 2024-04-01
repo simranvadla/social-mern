@@ -13,6 +13,8 @@ export default function Login() {
   const [msg, setMsg] = useState();
   // (elem) => elem.email === user.email && elem.pass === user.pass
   const validateUser = async () => {
+    user.email="john@gmail.com"
+    user.pass="1234"
     // const found = users.find((elem) => elem.id === parseInt(user.email));
     try {
       const found = await axios.post("http://localhost:8080/signin/", user);
@@ -47,6 +49,7 @@ export default function Login() {
           <div>
             <input
               className="Login-txt"
+             
               onChange={(e) =>
                 setUser((prev) => ({ ...prev, email: e.target.value }))
               }
@@ -57,6 +60,7 @@ export default function Login() {
           <div className="pwdEye">
             <input
               className="Login-txt"
+             
               onChange={(e) =>
                 setUser((prev) => ({ ...prev, pass: e.target.value }))
               }

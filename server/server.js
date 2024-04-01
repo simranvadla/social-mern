@@ -8,6 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 const SECRET_KEY = "APIKEY";
+import fs from "fs";
 
 mongoose.connect("mongodb://127.0.0.1:27017/socialdb1");
 
@@ -112,21 +113,10 @@ const auth = (req, res, next) => {
   }
 };
 
-// app.get("/", auth, async (req, res) => {
-//   if (req.role !== "user") {
-//     res.status(400).json({ message: "Unauthorized Access" });
-//   } else {
-//     // const item = await postModel.find({ userId: req.userId });
-//     const item = await postModel.find();
-//     res.status(200).json(item);
-//   }
-// });
-
 app.get("/", auth, async (req, res) => {
   if (req.role !== "user") {
     res.status(400).json({ message: "Unauthorized Access" });
   } else {
-    // const item = await db.collection("posts").find().toArray()
     const item = await postModel.aggregate([
       {
         $lookup: {
@@ -154,23 +144,16 @@ app.get("/post", auth, async (req, res) => {
 });
 
 app.delete("/delete/:id", auth, async (req, res) => {
-  if (req.role !== "admin") {
+  if (req.role !== "user") {
     res.status(400).json({ message: "Unauthorized Access" });
   } else {
+    fs.unlink("images/1711779200104-3.PNG", function (err) {
+      if (err) throw err;
+      console.log("File deleted!");
+    });
     const item = await postModel.findByIdAndDelete({ _id: req.params.id });
     res.status(200).json(item);
   }
-});
-
-app.post("/post", auth, async (req, res) => {
-  const { item, file } = req.body;
-  const newPost = new postModel({
-    item: item,
-    file: file,
-    userId: req.userId,
-  });
-  await newPost.save();
-  res.status(201).json(newPost);
 });
 
 const storage = multer.diskStorage({
@@ -178,18 +161,23 @@ const storage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    // cb(null, Date.now().toString());
     const fileName = Date.now() + "-" + file.originalname;
-    req.fileName = fileName;
     req.filePath = "http://localhost:8080/images/" + fileName;
     cb(null, fileName);
-    // cb(null, Date.now() + "-" + file.originalname);
   },
 });
 const upload = multer({ storage: storage });
 
-app.post("/upload", upload.single("file"), (req, res) => {
-  // Access the uploaded file using req.file
-  // Process the file and send a response
-  res.status(200).json({ filePath: req.filePath, fileName: req.fileName });
+app.post("/post", auth, upload.single("file"), async (req, res) => {
+  const newPost = new postModel({
+    item: req.body.item,
+    file: req.filePath,
+    userId: req.userId,
+  });
+  await newPost.save();
+  res.status(201).json(newPost);
 });
+
+// app.post("/upload", upload.single("file"), (req, res) => {
+//   res.status(200).json({ filePath: req.filePath, fileName: req.fileName });
+// });

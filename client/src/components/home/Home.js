@@ -10,44 +10,54 @@ export default function Home() {
   const [file, setFile] = useState();
   const [filePath, setFilePath] = useState();
   const [fileName, setFileName] = useState();
-  const [flag,setFlag] = useState(0)
-  // const url = `https://jsonplaceholder.typicode.com/posts/`;
+  const [flag, setFlag] = useState(0);
   const url = "http://localhost:8080/";
-  const data = useFetch(url,flag);
-// console.log(data)
+  const data = useFetch(url, flag);
   const handleClick = async (e) => {
     setFile(e.target.files[0]);
     const formData = new FormData();
     formData.append("file", file);
     const url = "http://localhost:8080/";
     const result = await axios.post(url, formData);
-
   };
 
   const uploadFile = async () => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file1);
     const url = "http://localhost:8080/upload/";
     const result = await axios.post(url, formData);
-    setFilePath(result.data.filePath);
-    setFileName(result.data.fileName)
-    // console.log(result.data.filePath);
+    return result;
+    // setFilePath(result.data.filePath);
+    // setFileName(result.data.fileName)
   };
 
-  useEffect(() => {
-    if (file) uploadFile();
-  }, [file]);
+  // useEffect(() => {
+  //   if (file) uploadFile();
+  // }, [file]);
 
   const handleSubmit = async () => {
+    // const result = await uploadFile()
+    // setFilePath(result.data.filePath);
+    // console.log("FilePath",filePath)
+    const formData = new FormData();
+    formData.append("file", file1);
+    formData.append("item", post);
     const url = "http://localhost:8080/post";
-    await axios.post(
-      url,
-      { item: post, file: filePath },
-      { headers: { Authorization: `Bearer ${user.token}` } }
-    );
-    setFlag(flag+1)
-    setFilePath(null)
+    await axios.post(url, formData, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+    setFlag(flag + 1);
+    setFile(null);
   };
+
+  const [file1, setFile1] = useState();
+  function handleChange(e) {
+    console.log(e.target.files);
+    setFile(URL.createObjectURL(e.target.files[0]));
+    setFile1(e.target.files[0]);
+    console.log(URL.createObjectURL(e.target.files[0]));
+  }
+
   return (
     <div>
       <h1>News Feeds</h1>
@@ -63,12 +73,14 @@ export default function Home() {
             ></textarea>
           </p>
           <p>
-            <img src={filePath} />
+            <img src={file} />
+            {/* <img src={filePath} /> */}
           </p>
           <p>
             <input
               type="file"
-              onChange={(e) => setFile(e.target.files[0])}
+              // onChange={(e) => setFile(e.target.files[0])}
+              onChange={handleChange}
               // onChange={(e) => handleClick(e)}
             ></input>
           </p>
