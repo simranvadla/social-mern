@@ -12,7 +12,7 @@ import fs from "fs";
 
 mongoose.connect("mongodb://127.0.0.1:27017/socialdb1");
 
-app.use(express.static("public"));
+// app.use(express.static("public"));
 app.use("/images", express.static("images"));
 
 const userSchema = mongoose.Schema(
@@ -147,10 +147,14 @@ app.delete("/delete/:id", auth, async (req, res) => {
   if (req.role !== "user") {
     res.status(400).json({ message: "Unauthorized Access" });
   } else {
-    fs.unlink("images/1711779200104-3.PNG", function (err) {
-      if (err) throw err;
-      console.log("File deleted!");
-    });
+    const del_file = await postModel.findOne({ _id: req.params.id });
+    if (del_file.file) {
+      const fname = "images/" + del_file.file.split("/").pop();
+      fs.unlink(fname, function (err) {
+        if (err) throw err;
+        console.log("File deleted!");
+      });
+    }
     const item = await postModel.findByIdAndDelete({ _id: req.params.id });
     res.status(200).json(item);
   }

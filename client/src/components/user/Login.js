@@ -17,7 +17,7 @@ export default function Login() {
     user.pass="1234"
     // const found = users.find((elem) => elem.id === parseInt(user.email));
     try {
-      const found = await axios.post("http://localhost:8080/signin/", user);
+      const found = await axios.post("http://localhost:8080/users/signin/", user);
       setUser((prev) => ({
         ...prev,
         name: found.data.user.name,

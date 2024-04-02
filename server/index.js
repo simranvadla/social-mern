@@ -3,13 +3,18 @@ import userRouter from "./routes/userRoutes.js"
 import todoRouter from "./routes/todoRoutes.js"
 import postRouter from "./routes/postRoutes.js"
 import mongoose from "mongoose";
-
+import cors from "cors";
 const app = express();
 app.use(express.json());
+app.use(cors())
+app.use("/images", express.static("images"));
 
 app.use("/users", userRouter);
 app.use("/todos", todoRouter);
 app.use("/posts", postRouter);
+
+// app.use("/products", postRouter);
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/socialdb1")
   .then(() => {
