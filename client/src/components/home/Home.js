@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useFetch } from "../../useFetch";
 import Homeitems from "./Homeitems";
+import { FaRegIdBadge } from "react-icons/fa";
 import axios from "axios";
 import Comment from "../comment/Comment";
 import Like from "../like/Like";
@@ -23,8 +24,8 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.log(err));
-      console.log(Date.now())
-  },[]);
+    console.log(Date.now());
+  }, [flag]);
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -82,36 +83,46 @@ export default function Home() {
             <button onClick={handleSubmit}>Post</button>
           </p>
         </div>
-
-        {data &&
-          data.map((elem) => (
-            <div key={elem._id}>
-              <div className="Home-post-header">
-                <div className="Home-post-text">
-                  {elem.users[0].name} - {elem.Post}
-                </div>
-                {elem.userId === user.id && (
-                  <div className="Home-post-delete">
-                    <button onClick={() => handleDelete(elem._id)}>
-                      Delete
-                    </button>
+     
+          {data &&
+            data.map((elem) => (
+              <div className="Home-post-box" key={elem._id}>
+                <div className="Home-post-header">
+                  <div className="Home-post-text">
+                    <div>
+                      <FaRegIdBadge size={50} />
+                    </div>
+                    <div>
+                      {elem.users[0].name}
+                      <br></br>
+                      {elem.daydiff}d
+                    </div>
                   </div>
-                )}
-              </div>
-              <img style={{ width: "100%" }} src={elem.file} />
-              <br></br>
-              <div className="Home-post-bottom">
-                <div className="Home-comments">
-                  <Comment id={elem._id} />
+                  {elem.userId === user.id && (
+                    <div className="Home-post-delete">
+                      <button onClick={() => handleDelete(elem._id)}>
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <div className="Home-likes">
-                  <Like id={elem._id} />
+                <div>{elem.Post}</div>
+                <img style={{ width: "100%" }} src={elem.file} />
+                <br></br>
+                <div className="Home-post-bottom">
+                  <div className="Home-comments">
+                    <Comment id={elem._id} />
+                  </div>
+                  <div className="Home-likes">
+                    <Like id={elem._id} />
+                  </div>
                 </div>
+                <br></br>
+                <hr></hr>
               </div>
-              <hr></hr>
-            </div>
-          ))}
-      </div>
+            ))}
+        </div>
+     
     </div>
   );
 }

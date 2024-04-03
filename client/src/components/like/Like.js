@@ -1,18 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { useFetch } from "../../useFetch";
 import { AppContext } from "../../context/appContext";
 import axios from "axios";
 export default function Like(props) {
-  const [comment, setComment] = useState();
+  // const [comment, setComment] = useState();
+  const [data, setData] = useState([]);
   const { user } = useContext(AppContext);
-  const url = `http://localhost:8080/likes/${props.id}`;
-  const data = useFetch(url);
+  const [flg,setFlg]=useState(true)
+  // const url = `http://localhost:8080/likes/${props.id}`;
+  // const data = useFetch(url);
   const found = data && data.filter((e) => e.userId === user.id);
   const toggleLike = async () => {
     const url = `http://localhost:8080/likes/${user.id}/${props.id}`;
     console.log(user.name);
     await axios.post(url);
+    setFlg(!flg)
   };
+
+  useEffect(() => {
+    const url = `http://localhost:8080/likes/${props.id}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => console.log(err));
+  }, [flg]);
+
   return (
     <div>
       <button

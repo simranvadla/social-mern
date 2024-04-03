@@ -18,7 +18,7 @@
     justify-content:space-between;
     margin-top:0px;
     align-items: flex-start;
-    background-color: silver;
+    /* background-color: silver; */
 }
 
 .Home-comments {
@@ -31,15 +31,17 @@
 }
 
 .Home-like-green{
-    background-color: pink;
+    background-color: lightgreen;
+    border:none;
+    font-weight: bold;
 }
 
 .Home-like-silver{
-    background-color: silver;
+    border:none
 }
 
 .Home-post-header{
-    background-color: silver;
+    /* background-color: silver; */
     padding-top: 15px;
     padding-bottom: 15px;
     margin-top: 10px;
@@ -50,8 +52,12 @@
 .Home-post-text{
 margin-left: 1px;
 font-size: large;
+display:flex;
 }
 
 .Home-post-delete{
     margin-right: 1px;
+}
+.Home-post-box{
+    margin-bottom:20px
 }

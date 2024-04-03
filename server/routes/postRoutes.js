@@ -5,7 +5,6 @@ import {
   createPost,
   deletePost,
   updatePost,
-  likePost,
 } from "../controllers/postController.js";
 import auth from "../middlewares/auth.js";
 
@@ -35,7 +34,5 @@ postRouter.post("/", createPost);
 postRouter.delete("/:id", deletePost);
 
 postRouter.put("/:id", updatePost);
-
-postRouter.put("/like/:id", likePost);
 
 export default postRouter;

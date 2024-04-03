@@ -61,27 +61,23 @@ const updatePost = async (req, res) => {
   }
 };
 
-const likePost = async (req, res) => {
-  const id = req.params.id;
-  // const { Post } = req.body;
-  // const newPost = {
-  //   Post: Post,
-  //   userId: req.userId,
-  // };
-  try {
-    await postModel.findByIdAndUpdate(id, { $inc: { likes: 1 } });
-    res.status(200).json({msg:"liked"});
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
 const getPosts = async (req, res) => {
   try {
     // const Posts = await postModel.find({ userId: req.userId });
 
     const Posts = await postModel.aggregate([
+      {
+        $addFields: {
+          daydiff: {
+            $dateDiff: {
+              startDate: "$createdAt",
+              endDate: new Date(),
+              unit: "day",
+            },
+          },
+        },
+      },
+      { $project: { Post: 1, userId: 1, file: 1, createdAt: 1, daydiff: 1 } },
       {
         $lookup: {
           from: "users",
@@ -99,4 +95,26 @@ const getPosts = async (req, res) => {
   }
 };
 
-export { createPost, deletePost, updatePost, getPosts, likePost };
+// const getPosts = async (req, res) => {
+//   try {
+//     // const Posts = await postModel.find({ userId: req.userId });
+
+//     const Posts = await postModel.aggregate([
+//       {
+//         $lookup: {
+//           from: "users",
+//           localField: "userId",
+//           foreignField: "_id",
+//           as: "users",
+//         },
+//       },
+//       { $sort: { _id: -1 } },
+//     ]);
+//     res.status(200).json(Posts);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
+
+export { createPost, deletePost, updatePost, getPosts };
