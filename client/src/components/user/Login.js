@@ -13,13 +13,14 @@ export default function Login() {
   const [msg, setMsg] = useState();
   // (elem) => elem.email === user.email && elem.pass === user.pass
   const validateUser = async () => {
-    user.email="john@gmail.com"
-    user.pass="1234"
+    // user.email="john@gmail.com"
+    // user.pass="1234"
     // const found = users.find((elem) => elem.id === parseInt(user.email));
     try {
       const found = await axios.post("http://localhost:8080/users/signin/", user);
       setUser((prev) => ({
         ...prev,
+        id:found.data.user._id,
         name: found.data.user.name,
         email: found.data.user.email,
         role:found.data.user.role,

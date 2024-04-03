@@ -2,6 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { useFetch } from "../../useFetch";
 import Homeitems from "./Homeitems";
 import axios from "axios";
+import Comment from "../comment/Comment";
+import Like from "../like/Like";
 import "./Home.css";
 import { AppContext } from "../../context/appContext";
 export default function Home() {
@@ -13,7 +15,6 @@ export default function Home() {
   const [flag, setFlag] = useState(0);
   const [data, setData] = useState();
   // const data = useFetch(url, flag);
-
   useEffect(() => {
     const url = "http://localhost:8080/posts/";
     fetch(url, {
@@ -22,7 +23,8 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.log(err));
-  }, [flag]);
+      console.log(Date.now())
+  },[]);
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -58,36 +60,54 @@ export default function Home() {
     <div>
       <h1>News Feeds</h1>
       <div className="Home-container">
-      
-          <div className="Home-upload">
-            <p>
-              <textarea required
-                className="Home-textarea"
-                onChange={(e) => setPost(e.target.value)}
-                rows="4"
-                cols="50"
-                placeholder="What's in your mind?"
-              ></textarea>
-            </p>
-            <p>
-              <img src={file} />
-              {/* <img src={filePath} /> */}
-            </p>
-            <p>
-              <input type="file" onChange={handleChange}></input>
-            </p>
-            <p>
-              <button onClick={handleSubmit}>Post</button>
-            </p>
-          </div>
-       
+        <div className="Home-upload">
+          <p>
+            <textarea
+              required
+              className="Home-textarea"
+              onChange={(e) => setPost(e.target.value)}
+              rows="4"
+              cols="50"
+              placeholder="What's in your mind?"
+            ></textarea>
+          </p>
+          <p>
+            <img src={file} />
+            {/* <img src={filePath} /> */}
+          </p>
+          <p>
+            <input type="file" onChange={handleChange}></input>
+          </p>
+          <p>
+            <button onClick={handleSubmit}>Post</button>
+          </p>
+        </div>
+
         {data &&
           data.map((elem) => (
             <div key={elem._id}>
-              {elem.users[0].name} - {elem.Post}
-              <button onClick={() => handleDelete(elem._id)}>Delete</button>
-              <br></br>
+              <div className="Home-post-header">
+                <div className="Home-post-text">
+                  {elem.users[0].name} - {elem.Post}
+                </div>
+                {elem.userId === user.id && (
+                  <div className="Home-post-delete">
+                    <button onClick={() => handleDelete(elem._id)}>
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
               <img style={{ width: "100%" }} src={elem.file} />
+              <br></br>
+              <div className="Home-post-bottom">
+                <div className="Home-comments">
+                  <Comment id={elem._id} />
+                </div>
+                <div className="Home-likes">
+                  <Like id={elem._id} />
+                </div>
+              </div>
               <hr></hr>
             </div>
           ))}

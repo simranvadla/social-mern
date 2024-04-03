@@ -1,12 +1,12 @@
-import express from 'express'
+import express from "express";
 import {
   getTasks,
   createTask,
   deleteTask,
   updateTask,
 } from "../controllers/todoController.js";
-import auth from "../middlewares/auth.js"
-import authorize from "../middlewares/authorize.js"
+import auth from "../middlewares/auth.js";
+import authorize from "../middlewares/authorize.js";
 
 const todoRouter = express.Router();
 

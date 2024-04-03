@@ -2,6 +2,8 @@ import express from 'express'
 import userRouter from "./routes/userRoutes.js"
 import todoRouter from "./routes/todoRoutes.js"
 import postRouter from "./routes/postRoutes.js"
+import commentRouter from "./routes/commentRoutes.js"
+import likeRouter from "./routes/likeRoutes.js"
 import mongoose from "mongoose";
 import cors from "cors";
 const app = express();
@@ -12,6 +14,8 @@ app.use("/images", express.static("images"));
 app.use("/users", userRouter);
 app.use("/todos", todoRouter);
 app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
+app.use("/likes", likeRouter);
 
 // app.use("/products", postRouter);
 

@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 const postSchema = mongoose.Schema(
   {
     Post: { type: String, required: true },
+    likes: { type: Number },
     file:{ type: String },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
